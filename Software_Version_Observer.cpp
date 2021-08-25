@@ -6,8 +6,7 @@
 #include <sstream>
 #include <fstream>
 
-// 
-
+// Stores entered URLs into a text file.
 void write_to_text_collection(std::string& URL_input)
 {
     // output file stream allows you to write contents to a file.
@@ -19,7 +18,13 @@ void write_to_text_collection(std::string& URL_input)
     output_file.open("software_version_collection.txt", std::ios::app);
     std::cout << "[+] Opened \"software_version_collection.txt\" successfully;" << "\n";
     output_file << URL_input << "\n";
+    std::cout << "[+] Successfully stored " << URL_input << "\n\n";
     output_file.close();
+}
+
+bool url_validation(std::string& URL_input)
+{
+    return false;
 }
 
 int main()
@@ -32,9 +37,21 @@ int main()
     std::cout << "=======================================" << "\n\n";
 
     std::string URL_input;
-    std::getline(std::cin, URL_input);
-    // Function to accept URL here.
-    write_to_text_collection(URL_input);
+    while (URL_input != "e" || URL_input != "exit")
+    {
+        std::cout << "[>] Enter a valid URL: " << "\n";
+        std::getline(std::cin, URL_input);
+        // Check whether URL is valid here:
+        if (url_validation(URL_input) == false)
+        {
+            std::cout << "[-] Invalid URL. Please try again: " << "\n";
+        }
+        else
+        {
+            // Function to accept and store URLs here:
+            write_to_text_collection(URL_input);
+        }
+    }
 
     // Two modes: 1) Accept a range of download links and store in a text file 2) Loop through all links in a text file and scan HTML source code for specific strings/keywords.
 
