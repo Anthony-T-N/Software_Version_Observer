@@ -1,6 +1,7 @@
 // Software_Version_Observer.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
-
+#define CURL_STATICLIB
+#include <curl/curl.h>
 #include <iostream>
 #include <filesystem>
 #include <sstream>
@@ -22,9 +23,33 @@ void write_to_text_collection(std::string& URL_input)
     output_file.close();
 }
 
-bool url_validation(std::string& URL_input)
+bool url_validation(std::string URL_input)
 {
-    return false;
+    // https://stackoverflow.com/questions/35068252/how-can-i-verify-if-an-url-https-exists-in-c-language/35068818
+    CURL* curl;
+    CURLcode response;
+    curl = curl_easy_init();
+
+    if (curl) 
+    {
+        // Understand c_str() please.
+        curl_easy_setopt(curl, CURLOPT_URL, URL_input.c_str());
+
+        curl_easy_setopt(curl, CURLOPT_NOBODY, 1);
+
+        response = curl_easy_perform(curl);
+
+        curl_easy_cleanup(curl);
+    }
+
+    if (response != CURLE_OK)
+    {
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
 
 int main()
@@ -37,14 +62,15 @@ int main()
     std::cout << "=======================================" << "\n\n";
 
     std::string URL_input;
-    while (URL_input != "e" || URL_input != "exit")
+    while (URL_input != "e" && URL_input != "exit")
     {
         std::cout << "[>] Enter a valid URL: " << "\n";
         std::getline(std::cin, URL_input);
+        
         // Check whether URL is valid here:
         if (url_validation(URL_input) == false)
         {
-            std::cout << "[-] Invalid URL. Please try again: " << "\n";
+            std::cout << "[-] Invalid URL. Please try again: " << "\n\n";
         }
         else
         {
