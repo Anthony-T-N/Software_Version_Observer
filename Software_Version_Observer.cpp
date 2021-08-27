@@ -7,6 +7,9 @@
 #include <sstream>
 #include <fstream>
 
+// https://stackoverflow.com/questions/21873048/getting-an-error-fopen-this-function-or-variable-may-be-unsafe-when-complin/21873153
+#pragma warning(disable:4996);
+
 // Stores entered URLs into a text file.
 void write_to_text_collection(std::string& URL_input)
 {
@@ -23,6 +26,37 @@ void write_to_text_collection(std::string& URL_input)
     output_file.close();
 }
 
+static size_t write_data(void* ptr, size_t size, size_t nmemb, void* stream)
+{
+    size_t written = fwrite(ptr, size, nmemb, (FILE*)stream);
+    return written;
+}
+
+void download_file(const char* url)
+{
+    // Function uses: <iostream>
+
+    CURL* curl;
+    FILE* fp;
+    CURLcode res;
+    curl = curl_easy_init();
+    if (curl)
+    {
+        fp = fopen("text.txt", "wb");
+        curl_easy_setopt(curl, CURLOPT_URL, url);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
+        res = curl_easy_perform(curl);
+        curl_easy_cleanup(curl);
+        if (res != CURLE_OK)
+        {
+            fprintf(stderr, "curl_easy_perform() failed: %s\n",
+                curl_easy_strerror(res));
+        }
+        fclose(fp);
+    }
+}
+
 bool url_validation(std::string URL_input)
 {
     // https://stackoverflow.com/questions/35068252/how-can-i-verify-if-an-url-https-exists-in-c-language/35068818
@@ -34,11 +68,8 @@ bool url_validation(std::string URL_input)
     {
         // Understand c_str() please.
         curl_easy_setopt(curl, CURLOPT_URL, URL_input.c_str());
-
         curl_easy_setopt(curl, CURLOPT_NOBODY, 1);
-
         response = curl_easy_perform(curl);
-
         curl_easy_cleanup(curl);
     }
 
@@ -78,6 +109,7 @@ int main()
             write_to_text_collection(URL_input);
         }
     }
+    download_file("Test");
 
     // Two modes: 1) Accept a range of download links and store in a text file 2) Loop through all links in a text file and scan HTML source code for specific strings/keywords.
 
