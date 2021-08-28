@@ -32,26 +32,26 @@ static size_t write_data(void* ptr, size_t size, size_t nmemb, void* stream)
     return written;
 }
 
-void download_file(const char* url)
+void download_file(std::string url)
 {
     // Function uses: <iostream>
 
     CURL* curl;
     FILE* fp;
-    CURLcode res;
+    CURLcode response;
     curl = curl_easy_init();
     if (curl)
     {
         fp = fopen("text.txt", "wb");
-        curl_easy_setopt(curl, CURLOPT_URL, url);
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
-        res = curl_easy_perform(curl);
+        response = curl_easy_perform(curl);
         curl_easy_cleanup(curl);
-        if (res != CURLE_OK)
+        if (response != CURLE_OK)
         {
             fprintf(stderr, "curl_easy_perform() failed: %s\n",
-                curl_easy_strerror(res));
+                curl_easy_strerror(response));
         }
         fclose(fp);
     }
@@ -92,24 +92,53 @@ int main()
     std::cout << "- Current location of executable: " << std::filesystem::current_path() << "\n";
     std::cout << "=======================================" << "\n\n";
 
-    std::string URL_input;
-    while (URL_input != "e" && URL_input != "exit")
+    std::string user_input;
+    std::cout << "Mode ? (1/2)" << "\n";
+    std::getline(std::cin, user_input);
+    if (user_input == "1")
     {
-        std::cout << "[>] Enter a valid URL: " << "\n";
-        std::getline(std::cin, URL_input);
-        
-        // Check whether URL is valid here:
-        if (url_validation(URL_input) == false)
+        std::string URL_input;
+        while (URL_input != "e" && URL_input != "exit")
         {
-            std::cout << "[-] Invalid URL. Please try again: " << "\n\n";
-        }
-        else
-        {
-            // Function to accept and store URLs here:
-            write_to_text_collection(URL_input);
+            std::cout << "[>] Enter a valid URL: " << "\n";
+            std::getline(std::cin, URL_input);
+
+            // Check whether URL is valid here:
+            if (url_validation(URL_input) == false)
+            {
+                std::cout << "[-] Invalid URL. Please try again: " << "\n\n";
+            }
+            else
+            {
+                // Function to accept and store URLs here:
+                write_to_text_collection(URL_input);
+            }
         }
     }
-    download_file("Test");
+    if (user_input == "2")
+    {
+        std::ifstream input_file;
+        std::string input_file_line;
+        input_file.open("software_version_collection.txt");
+        while (std::getline(input_file, input_file_line))
+        {
+            std::cout << "\n" << "[!] Reading: " << input_file_line << "\n";
+            download_file(input_file_line);
+            std::ifstream downloaded_file;
+            std::string downloaded_file_line;
+            downloaded_file.open("text.txt");
+            while (std::getline(downloaded_file, downloaded_file_line))
+            {
+                if (downloaded_file_line.find("href") != std::string::npos && downloaded_file_line.find("exe") != std::string::npos)
+                {
+                    downloaded_file_line.erase(0, downloaded_file_line.find_first_of("h"));
+                    std::cout << downloaded_file_line << "\n";
+                }
+            }
+            downloaded_file.close();
+        }
+        input_file.close();
+    }
 
     // Two modes: 1) Accept a range of download links and store in a text file 2) Loop through all links in a text file and scan HTML source code for specific strings/keywords.
 
