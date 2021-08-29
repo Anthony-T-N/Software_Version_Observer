@@ -42,7 +42,7 @@ void download_file(std::string url)
     curl = curl_easy_init();
     if (curl)
     {
-        fp = fopen("text.txt", "wb");
+        fp = fopen("temp_html.txt", "wb");
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
@@ -64,7 +64,7 @@ bool url_validation(std::string URL_input)
     CURLcode response;
     curl = curl_easy_init();
 
-    if (curl) 
+    if (curl)
     {
         // Understand c_str() please.
         curl_easy_setopt(curl, CURLOPT_URL, URL_input.c_str());
@@ -81,6 +81,35 @@ bool url_validation(std::string URL_input)
     {
         return true;
     }
+}
+
+bool source_search(std::string &downloaded_file_line)
+{
+    /*
+    * Conditions:
+    * - Contains a number.
+    * - Has at least one period.
+    * - Numbers are after "href".
+    * - May contain an exe.
+    *
+    */
+
+    // Only show any HTML lines containing numbers (Possible version number).
+    if (downloaded_file_line.find_first_of("0123456789") != std::string::npos)
+    {
+        // Show any HTML lines containing the "exe" extension (Possible executable).
+        if (downloaded_file_line.find("href") != std::string::npos && downloaded_file_line.find("exe") != std::string::npos)
+        {
+            downloaded_file_line.erase(0, downloaded_file_line.find_first_of("h"));
+            return true;
+        }
+        else if (downloaded_file_line.find("href") != std::string::npos && downloaded_file_line.find("download") != std::string::npos)
+        {
+            downloaded_file_line.erase(0, downloaded_file_line.find_first_of("h"));
+            return true;
+        }
+    }
+    return false;
 }
 
 int main()
@@ -126,12 +155,11 @@ int main()
             download_file(input_file_line);
             std::ifstream downloaded_file;
             std::string downloaded_file_line;
-            downloaded_file.open("text.txt");
+            downloaded_file.open("temp_html.txt");
             while (std::getline(downloaded_file, downloaded_file_line))
             {
-                if (downloaded_file_line.find("href") != std::string::npos && downloaded_file_line.find("exe") != std::string::npos)
+                if (source_search(downloaded_file_line) == true)
                 {
-                    downloaded_file_line.erase(0, downloaded_file_line.find_first_of("h"));
                     std::cout << downloaded_file_line << "\n";
                 }
             }
