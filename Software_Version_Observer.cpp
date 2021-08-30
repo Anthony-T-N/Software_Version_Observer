@@ -91,7 +91,9 @@ bool source_search(std::string &downloaded_file_line)
     * - Has at least one period.
     * - Numbers are after "href".
     * - May contain an exe.
-    *
+    * Considerations:
+    * - Desired version numbers and file extensions appear after "href" and a "/".
+    * < href | version # | exe >
     */
 
     // Only show any HTML lines containing numbers (Possible version number).
@@ -100,13 +102,30 @@ bool source_search(std::string &downloaded_file_line)
         // Show any HTML lines containing the "exe" extension (Possible executable).
         if (downloaded_file_line.find("href") != std::string::npos && downloaded_file_line.find("exe") != std::string::npos)
         {
-            downloaded_file_line.erase(0, downloaded_file_line.find_first_of("h"));
-            return true;
+            //std::cout << "DEBUG: " << downloaded_file_line.find("href") << "\n";
+            if (downloaded_file_line.find("href") < downloaded_file_line.find_last_of("0123456789"))
+            {
+                int temp_int = 0;
+                for (int i = 0; i <= downloaded_file_line.length(); i++)
+                {
+                    if (downloaded_file_line[i] == '/' && i < downloaded_file_line.find_last_of("0123456789") &&)
+                    {
+                        temp_int = i;
+                    }
+                }
+                //downloaded_file_line.erase(0, downloaded_file_line.find_first_of("h"));
+                downloaded_file_line.erase(0, temp_int);
+                return true;
+            }
         }
+        // For example: Python download page do not display exe(s) on main download page.
         else if (downloaded_file_line.find("href") != std::string::npos && downloaded_file_line.find("download") != std::string::npos)
         {
-            downloaded_file_line.erase(0, downloaded_file_line.find_first_of("h"));
-            return true;
+            if (downloaded_file_line.find("href") < downloaded_file_line.find_last_of("0123456789"))
+            {
+                downloaded_file_line.erase(0, downloaded_file_line.find_first_of("h"));
+                return true;
+            }
         }
     }
     return false;
