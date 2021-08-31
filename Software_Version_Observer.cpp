@@ -95,12 +95,32 @@ bool source_search(std::string &downloaded_file_line)
     * - Desired version numbers and file extensions appear after "href" and a "/".
     * < href | version # | exe >
     */
-
+    if (downloaded_file_line.find("href") != std::string::npos)
+    {
+        std::cout << "================================================================================" << "\n";
+        std::cout << downloaded_file_line << "\n";
+        int pos = 0;
+        for (int i = downloaded_file_line.find("href=") + 1; i <= downloaded_file_line.length(); i++)
+        {
+            // & wrong.
+            std::cout << i << " " << downloaded_file_line[i] << " " << &downloaded_file_line[i];
+            if (&downloaded_file_line[i] == "\"")
+            {
+                pos = i;
+                break;
+            }
+        }
+        std::cout << "JHEL" << "\n";
+        std::cout << downloaded_file_line.find("href=\"") << "\n";
+        std::cout << pos << "\n";
+        std::cout << downloaded_file_line.substr(downloaded_file_line.find("href=\"", pos)) << "\n";
+        std::cout << "================================================================================" << "\n";
+    }
     // Only show any HTML lines containing numbers (Possible version number).
     if (downloaded_file_line.find_first_of("0123456789") != std::string::npos)
     {
         // Show any HTML lines containing the "exe" extension (Possible executable).
-        if (downloaded_file_line.find("href") != std::string::npos && downloaded_file_line.find("exe") != std::string::npos)
+        if (downloaded_file_line.find("href") != std::string::npos && (downloaded_file_line.find("exe") != std::string::npos) || (downloaded_file_line.find("msi") != std::string::npos))
         {
             //std::cout << "DEBUG: " << downloaded_file_line.find("href") << "\n";
             if (downloaded_file_line.find("href") < downloaded_file_line.find_last_of("0123456789"))
@@ -108,7 +128,7 @@ bool source_search(std::string &downloaded_file_line)
                 int temp_int = 0;
                 for (int i = 0; i <= downloaded_file_line.length(); i++)
                 {
-                    if (downloaded_file_line[i] == '/' && i < downloaded_file_line.find_last_of("0123456789") &&)
+                    if (downloaded_file_line[i] == '/' && i < downloaded_file_line.find_last_of("0123456789"))
                     {
                         temp_int = i;
                     }
@@ -179,7 +199,7 @@ int main()
             {
                 if (source_search(downloaded_file_line) == true)
                 {
-                    std::cout << downloaded_file_line << "\n";
+                    std::cout << "[+] " << downloaded_file_line << "\n";
                 }
             }
             downloaded_file.close();
