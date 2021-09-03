@@ -105,10 +105,15 @@ void info_extraction(std::string downloaded_file_line)
             break;
         }
     }
-    std::cout << "\n";
-    std::cout << downloaded_file_line.find("href=\"") + 6 << " pos: " << pos << "\n";;
+    // //std::cout << "\n";
+    // //std::cout << downloaded_file_line.find("href=\"") + 6 << " pos: " << pos << "\n";;
     pos -= (downloaded_file_line.find("href=\"") + 6);
-    std::cout << downloaded_file_line.substr(downloaded_file_line.find("href=\"") + 6, pos) << "\n";
+    std::string temp_str = "";
+    temp_str = downloaded_file_line.substr(downloaded_file_line.find("href=\"") + 6, pos);
+    if (temp_str.find_first_of("0123456789") != std::string::npos)
+    {
+        std::cout << temp_str << "\n";
+    }
     //std::cout << "================================================================================" << "\n";
     //downloaded_file_line.erase(0, downloaded_file_line.find_first_of("h"));
     //downloaded_file_line.erase(0, temp_int);
@@ -136,7 +141,6 @@ bool source_search(std::string &downloaded_file_line)
             //std::cout << "DEBUG: " << downloaded_file_line.find("href") << "\n";
             if (downloaded_file_line.find("href") < downloaded_file_line.find_last_of("0123456789"))
             {
-                //info_extraction(downloaded_file_line);
                 return true;
             }
         }
@@ -145,7 +149,6 @@ bool source_search(std::string &downloaded_file_line)
         {
             if (downloaded_file_line.find("href") < downloaded_file_line.find_last_of("0123456789"))
             {
-                //info_extraction(downloaded_file_line);
                 //downloaded_file_line.erase(0, downloaded_file_line.find_first_of("h"));
                 return true;
             }
