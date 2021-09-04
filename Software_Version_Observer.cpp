@@ -112,7 +112,7 @@ void info_extraction(std::string downloaded_file_line)
     temp_str = downloaded_file_line.substr(downloaded_file_line.find("href=\"") + 6, pos);
     if (temp_str.find_first_of("0123456789") != std::string::npos)
     {
-        std::cout << temp_str << "\n";
+        std::cout << "[Info]: " << temp_str << "\n";
     }
     //std::cout << "================================================================================" << "\n";
     //downloaded_file_line.erase(0, downloaded_file_line.find_first_of("h"));
@@ -167,6 +167,8 @@ int main()
     std::cout << "=======================================" << "\n\n";
 
     std::string user_input;
+    std::cout << "Select mode \"1\" to enter URLs to store" << "\n";
+    std::cout << "Select mode \"2\" to scan URLs for updates" << "\n";
     std::cout << "Mode ? (1/2)" << "\n";
     std::getline(std::cin, user_input);
     if (user_input == "1")
