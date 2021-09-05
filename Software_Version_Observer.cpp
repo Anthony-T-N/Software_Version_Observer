@@ -157,6 +157,19 @@ bool source_search(std::string &downloaded_file_line)
     return false;
 }
 
+std::string user_input_validation(std::string &user_input)
+{
+    // Function uses: <iostream>,
+
+    std::getline(std::cin, user_input);
+    while (std::cin.fail() || user_input.find_first_not_of("12") != std::string::npos || user_input.empty())
+    {
+        std::cout << "[-] Invalid input - Please try again: ";
+        std::getline(std::cin, user_input);
+    }
+    return user_input;
+}
+
 int main()
 {
     std::cout << "=======================================" << "\n";
@@ -170,7 +183,7 @@ int main()
     std::cout << "Select mode \"1\" to enter URLs to store" << "\n";
     std::cout << "Select mode \"2\" to scan URLs for updates" << "\n";
     std::cout << "Mode ? (1/2)" << "\n";
-    std::getline(std::cin, user_input);
+    user_input_validation(user_input);
     if (user_input == "1")
     {
         std::string URL_input;
