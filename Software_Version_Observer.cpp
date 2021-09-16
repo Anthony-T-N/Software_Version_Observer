@@ -144,7 +144,7 @@ bool source_search(std::string &downloaded_file_line)
                 return true;
             }
         }
-        // For example: Python download page do not display exe(s) on main download page.
+        // For example: Python download page does not display exe(s) on main download page.
         else if (downloaded_file_line.find("href") != std::string::npos && downloaded_file_line.find("download") != std::string::npos)
         {
             if (downloaded_file_line.find("href") < downloaded_file_line.find_last_of("0123456789"))
@@ -164,6 +164,10 @@ std::string user_input_validation(std::string &user_input)
     std::getline(std::cin, user_input);
     while (std::cin.fail() || user_input.find_first_not_of("12") != std::string::npos || user_input.empty())
     {
+        if (user_input == "e" || user_input == "exit")
+        {
+            break;
+        }
         std::cout << "[-] Invalid input - Please try again: ";
         std::getline(std::cin, user_input);
     }
@@ -187,13 +191,17 @@ int main()
     if (user_input == "1")
     {
         std::string URL_input;
-        while (URL_input != "e" && URL_input != "exit")
+        while (true)
         {
             std::cout << "[>] Enter a valid URL: " << "\n";
             std::getline(std::cin, URL_input);
 
+            if (URL_input == "e" || URL_input == "exit")
+            {
+                break;
+            }
             // Check whether URL is valid here:
-            if (url_validation(URL_input) == false)
+            else if (url_validation(URL_input) == false)
             {
                 std::cout << "[-] Invalid URL. Please try again: " << "\n\n";
             }
@@ -218,6 +226,7 @@ int main()
             downloaded_file.open("temp_html.txt");
             while (std::getline(downloaded_file, downloaded_file_line))
             {
+                // Identifies whether current line meets any of the conditions to be a potential line of interest.
                 if (source_search(downloaded_file_line) == true)
                 {
                     info_extraction(downloaded_file_line);
@@ -228,6 +237,12 @@ int main()
         }
         input_file.close();
     }
+    std::cout << "\n";
+    std::cout << "[!] END" << "\n";
+    std::cout << "[!] Exiting..." << "\n\n";
+    system("pause");
+    return 0;
+
 
     // Two modes: 1) Accept a range of download links and store in a text file 2) Loop through all links in a text file and scan HTML source code for specific strings/keywords.
 
