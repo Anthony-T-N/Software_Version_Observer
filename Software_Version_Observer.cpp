@@ -17,10 +17,10 @@ void write_to_text_collection(std::string& URL_input)
     std::ofstream output_file;
     if (std::filesystem::exists("software_version_collection.txt") == false)
     {
-        std::cout << "[!] Creating new \"software_version_collection.txt\";" << "\n";
+        std::cout << "[!] Creating new <software_version_collection.txt>;" << "\n";
     }
     output_file.open("software_version_collection.txt", std::ios::app);
-    std::cout << "[+] Opened \"software_version_collection.txt\" successfully;" << "\n";
+    std::cout << "[+] Opened <software_version_collection.txt> successfully;" << "\n";
     output_file << URL_input << "\n";
     std::cout << "[+] Successfully stored " << URL_input << "\n\n";
     output_file.close();
@@ -161,6 +161,7 @@ std::string user_input_validation(std::string &user_input)
 {
     // Function uses: <iostream>,
 
+    // TODO: Situation where user enters "12".
     std::getline(std::cin, user_input);
     while (std::cin.fail() || user_input.find_first_not_of("12") != std::string::npos || user_input.empty())
     {
@@ -168,7 +169,8 @@ std::string user_input_validation(std::string &user_input)
         {
             break;
         }
-        std::cout << "[-] Invalid input - Please try again: ";
+        std::cout << "[-] Invalid input - Please try again:" << "\n";
+        std::cout << "> ";
         std::getline(std::cin, user_input);
     }
     return user_input;
@@ -184,58 +186,63 @@ int main()
     std::cout << "=======================================" << "\n\n";
 
     std::string user_input;
-    std::cout << "Select mode \"1\" to enter URLs to store" << "\n";
-    std::cout << "Select mode \"2\" to scan URLs for updates" << "\n";
-    std::cout << "Mode ? (1/2)" << "\n";
-    user_input_validation(user_input);
-    if (user_input == "1")
+    while (true)
     {
-        std::string URL_input;
-        while (true)
+        std::cout << "[1] Select mode \"1\" to enter URLs to store" << "\n";
+        std::cout << "[2] Select mode \"2\" to scan URLs for updates" << "\n";
+        std::cout << "> ";
+        user_input_validation(user_input);
+        if (user_input == "1")
         {
-            std::cout << "[>] Enter a valid URL: " << "\n";
-            std::getline(std::cin, URL_input);
+            std::string URL_input;
+            while (true)
+            {
+                std::cout << "[>] Enter a valid URL: " << "\n";
+                std::cout << "> ";
+                std::getline(std::cin, URL_input);
 
-            if (URL_input == "e" || URL_input == "exit")
-            {
-                break;
-            }
-            // Check whether URL is valid here:
-            else if (url_validation(URL_input) == false)
-            {
-                std::cout << "[-] Invalid URL. Please try again: " << "\n\n";
-            }
-            else
-            {
-                // Function to accept and store URLs here:
-                write_to_text_collection(URL_input);
-            }
-        }
-    }
-    if (user_input == "2")
-    {
-        std::ifstream input_file;
-        std::string input_file_line;
-        input_file.open("software_version_collection.txt");
-        while (std::getline(input_file, input_file_line))
-        {
-            std::cout << "\n" << "[!] Reading: " << input_file_line << "\n";
-            download_file(input_file_line);
-            std::ifstream downloaded_file;
-            std::string downloaded_file_line;
-            downloaded_file.open("temp_html.txt");
-            while (std::getline(downloaded_file, downloaded_file_line))
-            {
-                // Identifies whether current line meets any of the conditions to be a potential line of interest.
-                if (source_search(downloaded_file_line) == true)
+                if (URL_input == "e" || URL_input == "exit")
                 {
-                    info_extraction(downloaded_file_line);
-                    //std::cout << "[+] " << downloaded_file_line << "\n";
+                    break;
+                }
+                // Check whether URL is valid here:
+                else if (url_validation(URL_input) == false)
+                {
+                    std::cout << "[-] Invalid URL. Please try again: " << "\n\n";
+                }
+                else
+                {
+                    // Function to accept and store URLs here:
+                    write_to_text_collection(URL_input);
                 }
             }
-            downloaded_file.close();
         }
-        input_file.close();
+        if (user_input == "2")
+        {
+            std::ifstream input_file;
+            std::string input_file_line;
+            input_file.open("software_version_collection.txt");
+            while (std::getline(input_file, input_file_line))
+            {
+                std::cout << "\n" << "[!] Reading: " << input_file_line << "\n";
+                download_file(input_file_line);
+                std::ifstream downloaded_file;
+                std::string downloaded_file_line;
+                downloaded_file.open("temp_html.txt");
+                while (std::getline(downloaded_file, downloaded_file_line))
+                {
+                    // Identifies whether current line meets any of the conditions to be a potential line of interest.
+                    if (source_search(downloaded_file_line) == true)
+                    {
+                        info_extraction(downloaded_file_line);
+                        //std::cout << "[+] " << downloaded_file_line << "\n";
+                    }
+                }
+                downloaded_file.close();
+            }
+            input_file.close();
+        }
+        std::cout << "\n";
     }
     std::cout << "\n";
     std::cout << "[!] END" << "\n";
