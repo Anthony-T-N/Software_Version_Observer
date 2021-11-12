@@ -190,6 +190,7 @@ int main()
     {
         std::cout << "[1] Select mode \"1\" to enter URLs to store" << "\n";
         std::cout << "[2] Select mode \"2\" to scan URLs for updates" << "\n";
+        std::cout << "[e/exit] Exit" << "\n";
         std::cout << "> ";
         user_input_validation(user_input);
         if (user_input == "1")
@@ -217,7 +218,7 @@ int main()
                 }
             }
         }
-        if (user_input == "2")
+        else if (user_input == "2")
         {
             std::ifstream input_file;
             std::string input_file_line;
@@ -239,8 +240,13 @@ int main()
                     }
                 }
                 downloaded_file.close();
+                std::remove("temp_html.txt");
             }
             input_file.close();
+        }
+        else if (user_input == "e" || user_input == "exit")
+        {
+            break;
         }
         std::cout << "\n";
     }
