@@ -163,7 +163,7 @@ std::string user_input_validation(std::string &user_input)
 
     // TODO: Situation where user enters "12".
     std::getline(std::cin, user_input);
-    while (std::cin.fail() || user_input.find_first_not_of("12") != std::string::npos || user_input.empty())
+    while (std::cin.fail() || user_input.find_first_not_of("123") != std::string::npos || user_input.empty())
     {
         if (user_input == "e" || user_input == "exit")
         {
@@ -190,6 +190,7 @@ int main()
     {
         std::cout << "[1] Select mode \"1\" to enter URLs to store" << "\n";
         std::cout << "[2] Select mode \"2\" to scan URLs for updates" << "\n";
+        std::cout << "[3] Select mode \"3\" to <test>" << "\n";
         std::cout << "[e/exit] Exit" << "\n";
         std::cout << "> ";
         user_input_validation(user_input);
@@ -243,6 +244,18 @@ int main()
                 std::remove("temp_html.txt");
             }
             input_file.close();
+        }
+        else if (user_input == "3")
+        {
+            std::vector<std::string> dir_vector;
+            std::string test = std::filesystem::current_path().string();
+            for (const auto& entry : std::filesystem::directory_iterator(test))
+                dir_vector.push_back(entry.path().u8string());
+            
+            for (int i = 0; i <= dir_vector.size() - 1; i++)
+            {
+                std::cout << "[" << i << "] " << dir_vector[i] << "\n";
+            }
         }
         else if (user_input == "e" || user_input == "exit")
         {
