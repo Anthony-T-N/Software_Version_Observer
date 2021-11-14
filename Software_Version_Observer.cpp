@@ -15,12 +15,12 @@ void write_to_text_collection(std::string& URL_input)
 {
     // output file stream allows you to write contents to a file.
     std::ofstream output_file;
-    if (std::filesystem::exists("software_version_collection.txt") == false)
+    if (std::filesystem::exists("app_ver_list.txt") == false)
     {
-        std::cout << "[!] Creating new <software_version_collection.txt>;" << "\n";
+        std::cout << "[!] Creating new <app_ver_list.txt>;" << "\n";
     }
-    output_file.open("software_version_collection.txt", std::ios::app);
-    std::cout << "[+] Opened <software_version_collection.txt> successfully;" << "\n";
+    output_file.open("app_ver_list.txt", std::ios::app);
+    std::cout << "[+] Opened <app_ver_list.txt> successfully;" << "\n";
     output_file << URL_input << "\n";
     std::cout << "[+] Successfully stored " << URL_input << "\n\n";
     output_file.close();
@@ -202,7 +202,7 @@ int main()
                 std::cout << "[>] Enter a valid URL: " << "\n";
                 std::cout << "> ";
                 std::getline(std::cin, URL_input);
-
+                std::cout << "[!] Performing URL validation;" << "\n";
                 if (URL_input == "e" || URL_input == "exit")
                 {
                     break;
@@ -223,7 +223,7 @@ int main()
         {
             std::ifstream input_file;
             std::string input_file_line;
-            input_file.open("software_version_collection.txt");
+            input_file.open("app_ver_list.txt");
             while (std::getline(input_file, input_file_line))
             {
                 std::cout << "\n" << "[!] Reading: " << input_file_line << "\n";
@@ -247,14 +247,17 @@ int main()
         }
         else if (user_input == "3")
         {
-            std::vector<std::string> dir_vector;
+            std::vector<std::string> available_txt_files;
             std::string test = std::filesystem::current_path().string();
             for (const auto& entry : std::filesystem::directory_iterator(test))
-                dir_vector.push_back(entry.path().u8string());
-            
-            for (int i = 0; i <= dir_vector.size() - 1; i++)
+                // TODO: Add addtional conditions to identify files ending with .txt.
+                if (entry.path().u8string().find(".txt") != std::string::npos)
+                {
+                    available_txt_files.push_back(entry.path().u8string());
+                }
+            for (int i = 0; i <= available_txt_files.size() - 1; i++)
             {
-                std::cout << "[" << i << "] " << dir_vector[i] << "\n";
+                std::cout << "[" << i << "] " << available_txt_files[i] << "\n";
             }
         }
         else if (user_input == "e" || user_input == "exit")
