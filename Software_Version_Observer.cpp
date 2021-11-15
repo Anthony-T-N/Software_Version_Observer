@@ -248,17 +248,21 @@ int main()
         else if (user_input == "3")
         {
             std::vector<std::string> available_txt_files;
+            std::vector<std::string> available_txt_file_paths;
             std::string test = std::filesystem::current_path().string();
             for (const auto& entry : std::filesystem::directory_iterator(test))
                 // TODO: Add addtional conditions to identify files ending with .txt.
+                // TODO: Add addtional conditions to identify files with certain keywords.
                 if (entry.path().u8string().find(".txt") != std::string::npos)
                 {
-                    available_txt_files.push_back(entry.path().u8string());
+                    available_txt_file_paths.push_back(entry.path().u8string());
                 }
-            for (int i = 0; i <= available_txt_files.size() - 1; i++)
+            for (int i = 0; i <= available_txt_file_paths.size() - 1; i++)
             {
+                available_txt_files.push_back(available_txt_file_paths[i].substr(available_txt_file_paths[i].find_last_of("\\") + 1, available_txt_file_paths[i].length() - 1));
                 std::cout << "[" << i << "] " << available_txt_files[i] << "\n";
             }
+            // Dictionary pairing options with available text files here.
         }
         else if (user_input == "e" || user_input == "exit")
         {
