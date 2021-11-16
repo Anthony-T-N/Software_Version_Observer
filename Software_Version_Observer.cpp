@@ -262,7 +262,21 @@ int main()
                 available_txt_files.push_back(available_txt_file_paths[i].substr(available_txt_file_paths[i].find_last_of("\\") + 1, available_txt_file_paths[i].length() - 1));
                 std::cout << "[" << i << "] " << available_txt_files[i] << "\n";
             }
-            // Dictionary pairing options with available text files here.
+            std::cout << "OPTION:" << "\n";
+            std::getline(std::cin, user_input);
+            // Validate whether user input is a number
+            if (user_input.find_first_not_of("0123456789") != std::string::npos)
+            {
+                std::cout << "ERROR" << "\n";
+                break;
+            }
+            for (int i = 0; i <= available_txt_files.size(); i++)
+            {
+                if (std::stoi(user_input) == i)
+                {
+                    std::cout << available_txt_files[i] << "\n";
+                }
+            }
         }
         else if (user_input == "e" || user_input == "exit")
         {
