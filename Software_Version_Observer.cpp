@@ -263,18 +263,28 @@ int main()
                 std::cout << "[" << i << "] " << available_txt_files[i] << "\n";
             }
             std::cout << "OPTION:" << "\n";
+            std::cout << "> ";
             std::getline(std::cin, user_input);
             // Validate whether user input is a number
             if (user_input.find_first_not_of("0123456789") != std::string::npos)
             {
                 std::cout << "ERROR" << "\n";
-                break;
+                continue;
             }
+            // Can't handle large numbers.
+            if (std::stoi(user_input) > available_txt_files.size())
+            {
+                std::cout << "ERROR" << "\n";
+                continue;
+            }
+            std::string available_txt_files_to_open = "";
             for (int i = 0; i <= available_txt_files.size(); i++)
             {
                 if (std::stoi(user_input) == i)
                 {
                     std::cout << available_txt_files[i] << "\n";
+                    available_txt_files_to_open = available_txt_files[i];
+                    break;
                 }
             }
         }
