@@ -176,6 +176,33 @@ std::string user_input_validation(std::string &user_input)
     return user_input;
 }
 
+void read_file(std::string file)
+{
+    std::ifstream input_file;
+    std::string input_file_line;
+    input_file.open(file);
+    while (std::getline(input_file, input_file_line))
+    {
+        std::cout << "\n" << "[!] Reading: " << input_file_line << "\n";
+        download_file(input_file_line);
+        std::ifstream downloaded_file;
+        std::string downloaded_file_line;
+        downloaded_file.open("temp_html.txt");
+        while (std::getline(downloaded_file, downloaded_file_line))
+        {
+            // Identifies whether current line meets any of the conditions to be a potential line of interest.
+            if (source_search(downloaded_file_line) == true)
+            {
+                info_extraction(downloaded_file_line);
+                //std::cout << "[+] " << downloaded_file_line << "\n";
+            }
+        }
+        downloaded_file.close();
+        std::remove("temp_html.txt");
+    }
+    input_file.close();
+}
+
 int main()
 {
     std::cout << "=======================================" << "\n";
@@ -221,29 +248,7 @@ int main()
         }
         else if (user_input == "2")
         {
-            std::ifstream input_file;
-            std::string input_file_line;
-            input_file.open("app_ver_list.txt");
-            while (std::getline(input_file, input_file_line))
-            {
-                std::cout << "\n" << "[!] Reading: " << input_file_line << "\n";
-                download_file(input_file_line);
-                std::ifstream downloaded_file;
-                std::string downloaded_file_line;
-                downloaded_file.open("temp_html.txt");
-                while (std::getline(downloaded_file, downloaded_file_line))
-                {
-                    // Identifies whether current line meets any of the conditions to be a potential line of interest.
-                    if (source_search(downloaded_file_line) == true)
-                    {
-                        info_extraction(downloaded_file_line);
-                        //std::cout << "[+] " << downloaded_file_line << "\n";
-                    }
-                }
-                downloaded_file.close();
-                std::remove("temp_html.txt");
-            }
-            input_file.close();
+            read_file("app_ver_list.txt");
         }
         else if (user_input == "3")
         {
@@ -287,6 +292,7 @@ int main()
                     break;
                 }
             }
+            read_file(available_txt_files_to_open);
         }
         else if (user_input == "e" || user_input == "exit")
         {
