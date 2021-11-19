@@ -203,6 +203,58 @@ void read_file(std::string file)
     input_file.close();
 }
 
+void selection()
+{
+
+    std::string user_input;
+    std::vector<std::string> available_txt_files;
+    std::vector<std::string> available_txt_file_paths;
+    std::string test = std::filesystem::current_path().string();
+    for (const auto& entry : std::filesystem::directory_iterator(test))
+        // TODO: Add addtional conditions to identify files ending with .txt.
+        // TODO: Add addtional conditions to identify files with certain keywords.
+        if (entry.path().u8string().find(".txt") != std::string::npos)
+        {
+            available_txt_file_paths.push_back(entry.path().u8string());
+        }
+    for (int i = 0; i <= available_txt_file_paths.size() - 1; i++)
+    {
+        available_txt_files.push_back(available_txt_file_paths[i].substr(available_txt_file_paths[i].find_last_of("\\") + 1, available_txt_file_paths[i].length() - 1));
+        std::cout << "[" << i << "] " << available_txt_files[i] << "\n";
+    }
+    while (true)
+    {
+        std::cout << "\n";
+        std::cout << "OPTION:" << "\n";
+        std::cout << "> ";
+        std::getline(std::cin, user_input);
+        // Validate whether user input is a number
+        if (user_input.find_first_not_of("0123456789") != std::string::npos)
+        {
+            std::cout << "ERROR" << "\n";
+            continue;
+        }
+        // Can't handle large numbers.
+        if (std::stoi(user_input) > available_txt_files.size())
+        {
+            std::cout << "ERROR" << "\n";
+            continue;
+        }
+        std::string available_txt_files_to_open = "";
+        for (int i = 0; i <= available_txt_files.size(); i++)
+        {
+            if (std::stoi(user_input) == i)
+            {
+                std::cout << available_txt_files[i] << "\n";
+                available_txt_files_to_open = available_txt_files[i];
+                break;
+            }
+        }
+        read_file(available_txt_files_to_open);
+        break;
+    }
+}
+
 int main()
 {
     std::cout << "=======================================" << "\n";
@@ -252,47 +304,7 @@ int main()
         }
         else if (user_input == "3")
         {
-            std::vector<std::string> available_txt_files;
-            std::vector<std::string> available_txt_file_paths;
-            std::string test = std::filesystem::current_path().string();
-            for (const auto& entry : std::filesystem::directory_iterator(test))
-                // TODO: Add addtional conditions to identify files ending with .txt.
-                // TODO: Add addtional conditions to identify files with certain keywords.
-                if (entry.path().u8string().find(".txt") != std::string::npos)
-                {
-                    available_txt_file_paths.push_back(entry.path().u8string());
-                }
-            for (int i = 0; i <= available_txt_file_paths.size() - 1; i++)
-            {
-                available_txt_files.push_back(available_txt_file_paths[i].substr(available_txt_file_paths[i].find_last_of("\\") + 1, available_txt_file_paths[i].length() - 1));
-                std::cout << "[" << i << "] " << available_txt_files[i] << "\n";
-            }
-            std::cout << "OPTION:" << "\n";
-            std::cout << "> ";
-            std::getline(std::cin, user_input);
-            // Validate whether user input is a number
-            if (user_input.find_first_not_of("0123456789") != std::string::npos)
-            {
-                std::cout << "ERROR" << "\n";
-                continue;
-            }
-            // Can't handle large numbers.
-            if (std::stoi(user_input) > available_txt_files.size())
-            {
-                std::cout << "ERROR" << "\n";
-                continue;
-            }
-            std::string available_txt_files_to_open = "";
-            for (int i = 0; i <= available_txt_files.size(); i++)
-            {
-                if (std::stoi(user_input) == i)
-                {
-                    std::cout << available_txt_files[i] << "\n";
-                    available_txt_files_to_open = available_txt_files[i];
-                    break;
-                }
-            }
-            read_file(available_txt_files_to_open);
+            selection();
         }
         else if (user_input == "e" || user_input == "exit")
         {
