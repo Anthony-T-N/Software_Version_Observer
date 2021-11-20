@@ -205,8 +205,6 @@ void read_file(std::string file)
 
 void selection()
 {
-
-    std::string user_input;
     std::vector<std::string> available_txt_files;
     std::vector<std::string> available_txt_file_paths;
     std::string test = std::filesystem::current_path().string();
@@ -222,22 +220,23 @@ void selection()
         available_txt_files.push_back(available_txt_file_paths[i].substr(available_txt_file_paths[i].find_last_of("\\") + 1, available_txt_file_paths[i].length() - 1));
         std::cout << "[" << i << "] " << available_txt_files[i] << "\n";
     }
+    std::string user_input;
     while (true)
     {
         std::cout << "\n";
-        std::cout << "OPTION:" << "\n";
+        std::cout << "[>] File selection:" << "\n";
         std::cout << "> ";
         std::getline(std::cin, user_input);
         // Validate whether user input is a number
         if (user_input.find_first_not_of("0123456789") != std::string::npos)
         {
-            std::cout << "ERROR" << "\n";
+            std::cout << "[-] Invalid input - Please try again:" << "\n";
             continue;
         }
         // Can't handle large numbers.
         if (std::stoi(user_input) > available_txt_files.size())
         {
-            std::cout << "ERROR" << "\n";
+            std::cout << "[-] Invalid input - Please try again:" << "\n";
             continue;
         }
         std::string available_txt_files_to_open = "";
