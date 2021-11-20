@@ -274,26 +274,30 @@ int main()
         user_input_validation(user_input);
         if (user_input == "1")
         {
-            std::string URL_input;
             while (true)
             {
+                std::cout << "Create new file ?" << "\n";
+                if (user_input == "N")
+                {
+
+                }
                 std::cout << "[>] Enter a valid URL: " << "\n";
                 std::cout << "> ";
-                std::getline(std::cin, URL_input);
+                std::getline(std::cin, user_input);
                 std::cout << "[!] Performing URL validation;" << "\n";
-                if (URL_input == "e" || URL_input == "exit")
+                if (user_input == "e" || user_input == "exit")
                 {
                     break;
                 }
                 // Check whether URL is valid here:
-                else if (url_validation(URL_input) == false)
+                else if (url_validation(user_input) == false)
                 {
                     std::cout << "[-] Invalid URL. Please try again: " << "\n\n";
                 }
                 else
                 {
                     // Function to accept and store URLs here:
-                    write_to_text_collection(URL_input);
+                    write_to_text_collection(user_input);
                 }
             }
         }
