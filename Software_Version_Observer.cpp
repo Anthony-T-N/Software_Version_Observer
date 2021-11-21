@@ -11,15 +11,26 @@
 #pragma warning(disable:4996);
 
 // Stores entered URLs into a text file.
-void write_to_text_collection(std::string& URL_input)
+void write_to_text_collection(std::string& URL_input, std::string& ver_list_name)
 {
+    std::string full_ver_list_name = "app_ver_list.txt";
+    full_ver_list_name = "<" + ver_list_name + ">";
+    std::cout << full_ver_list_name << "\n";
     // output file stream allows you to write contents to a file.
+    std::ofstream output_file;
+    if (std::filesystem::exists(full_ver_list_name) == false)
+    {
+        std::cout << "[!] Creating new <app_ver_list.txt>;" << "\n";
+    }
+    output_file.open(full_ver_list_name, std::ios::app);
+    /*
     std::ofstream output_file;
     if (std::filesystem::exists("app_ver_list.txt") == false)
     {
         std::cout << "[!] Creating new <app_ver_list.txt>;" << "\n";
     }
     output_file.open("app_ver_list.txt", std::ios::app);
+    */
     std::cout << "[+] Opened <app_ver_list.txt> successfully;" << "\n";
     output_file << URL_input << "\n";
     std::cout << "[+] Successfully stored " << URL_input << "\n\n";
@@ -264,6 +275,7 @@ int main()
     std::cout << "=======================================" << "\n\n";
 
     std::string user_input;
+    std::string ver_list_name = "";
     while (true)
     {
         std::cout << "[1] Select mode \"1\" to enter URLs to store" << "\n";
@@ -274,13 +286,20 @@ int main()
         user_input_validation(user_input);
         if (user_input == "1")
         {
+
+
+            std::cout << "[>] Create new file ?" << "\n";
+            std::getline(std::cin, user_input);
+            if (user_input == "y")
+            {
+                std::cout << "[>] Enter new list name:" << "\n";
+                std::cout << "> ";
+                std::getline(std::cin, user_input);
+                write_to_text_collection(user_input, ver_list_name);
+            }
+
             while (true)
             {
-                std::cout << "Create new file ?" << "\n";
-                if (user_input == "N")
-                {
-
-                }
                 std::cout << "[>] Enter a valid URL: " << "\n";
                 std::cout << "> ";
                 std::getline(std::cin, user_input);
@@ -297,7 +316,7 @@ int main()
                 else
                 {
                     // Function to accept and store URLs here:
-                    write_to_text_collection(user_input);
+                    write_to_text_collection(user_input, ver_list_name);
                 }
             }
         }
