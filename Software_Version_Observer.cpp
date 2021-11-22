@@ -20,7 +20,7 @@ void write_to_text_collection(std::string& URL_input, std::string& ver_list_name
     std::ofstream output_file;
     if (std::filesystem::exists(full_ver_list_name) == false)
     {
-        std::cout << "[!] Creating new <app_ver_list.txt>;" << "\n";
+        std::cout << "[!] Creating " << full_ver_list_name << "\n";
     }
     output_file.open(full_ver_list_name, std::ios::app);
     /*
@@ -268,7 +268,7 @@ void selection()
 int main()
 {
     std::cout << "=======================================" << "\n";
-    std::cout << "- Welcome to the Software_Version_Observer console application" << "\n";
+    std::cout << "- Software_Version_Observer console application" << "\n";
     std::cout << "- Console Application Version: 1.0" << "\n";
     std::cout << "- Created By: Anthony N." << "\n";
     std::cout << "- Current location of executable: " << std::filesystem::current_path() << "\n";
@@ -288,7 +288,7 @@ int main()
         {
 
 
-            std::cout << "[>] Create new file ?" << "\n";
+            std::cout << "[>] Create new file ?" << "\n" << "> ";
             std::getline(std::cin, user_input);
             if (user_input == "y")
             {
@@ -300,8 +300,7 @@ int main()
 
             while (true)
             {
-                std::cout << "[>] Enter a valid URL: " << "\n";
-                std::cout << "> ";
+                std::cout << "[>] Enter a valid URL: " << "\n" << "> ";
                 std::getline(std::cin, user_input);
                 std::cout << "[!] Performing URL validation;" << "\n";
                 if (user_input == "e" || user_input == "exit")
@@ -339,7 +338,6 @@ int main()
     std::cout << "[!] Exiting..." << "\n\n";
     system("pause");
     return 0;
-
 
     // Two modes: 1) Accept a range of download links and store in a text file 2) Loop through all links in a text file and scan HTML source code for specific strings/keywords.
 
