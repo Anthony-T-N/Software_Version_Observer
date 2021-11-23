@@ -31,7 +31,7 @@ void write_to_text_collection(std::string& URL_input, std::string& ver_list_name
     }
     output_file.open("app_ver_list.txt", std::ios::app);
     */
-    std::cout << "[+] Opened <app_ver_list.txt> successfully;" << "\n";
+    std::cout << "[+] Opened " << full_ver_list_name << " successfully;" << "\n";
     output_file << URL_input << "\n";
     std::cout << "[+] Successfully stored " << URL_input << "\n\n";
     output_file.close();
@@ -174,7 +174,7 @@ std::string user_input_validation(std::string &user_input)
 
     // TODO: Situation where user enters "12".
     std::getline(std::cin, user_input);
-    while (std::cin.fail() || user_input.find_first_not_of("123") != std::string::npos || user_input.empty())
+    while (std::cin.fail() || user_input.find_first_not_of("1234") != std::string::npos || user_input.empty())
     {
         if (user_input == "e" || user_input == "exit")
         {
@@ -214,7 +214,7 @@ void read_file(std::string file)
     input_file.close();
 }
 
-void selection()
+void selection(std::string read_or_store)
 {
     std::vector<std::string> available_txt_files;
     std::vector<std::string> available_txt_file_paths;
@@ -260,7 +260,34 @@ void selection()
                 break;
             }
         }
-        read_file(available_txt_files_to_open);
+        if (read_or_store == "read")
+        {
+            read_file(available_txt_files_to_open);
+        }
+        else if (read_or_store == "store")
+        {
+            while (true)
+            {
+                std::cout << "[>] Enter a valid URL: " << "\n" << "> ";
+                std::getline(std::cin, user_input);
+                std::cout << "[!] Performing URL validation;" << "\n";
+                if (user_input == "e" || user_input == "exit")
+                {
+                    break;
+                }
+                // Check whether URL is valid here:
+                else if (url_validation(user_input) == false)
+                {
+                    std::cout << "[-] Invalid URL. Please try again: " << "\n\n";
+                }
+                else
+                {
+                    // Function to accept and store URLs here:
+                    write_to_text_collection(user_input, available_txt_files_to_open);
+                }
+            }
+            
+        }
         break;
     }
 }
@@ -281,6 +308,7 @@ int main()
         std::cout << "[1] Select mode \"1\" to enter URLs to store" << "\n";
         std::cout << "[2] Select mode \"2\" to scan URLs for updates" << "\n";
         std::cout << "[3] Select mode \"3\" to <test>" << "\n";
+        std::cout << "[4] Select mode \"4\" to <test>" << "\n";
         std::cout << "[e/exit] Exit" << "\n";
         std::cout << "> ";
         user_input_validation(user_input);
@@ -325,7 +353,11 @@ int main()
         }
         else if (user_input == "3")
         {
-            selection();
+            selection("read");
+        }
+        else if (user_input == "4")
+        {
+            selection("store");
         }
         else if (user_input == "e" || user_input == "exit")
         {
