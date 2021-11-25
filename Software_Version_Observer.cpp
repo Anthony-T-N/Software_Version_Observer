@@ -11,10 +11,23 @@
 #pragma warning(disable:4996);
 
 // Stores entered URLs into a text file.
-void write_to_text_collection(std::string& URL_input, std::string& ver_list_name, std::string& read_or_store)
+void write_to_text_collection(std::string& URL_input, std::string& ver_list_name)
 {
-    std::string full_ver_list_name;
+
+    // Reminder: Function creates file (If it doesn't exist) and stores URL. 
+
+    std::string full_ver_list_name = ver_list_name;
     std::ofstream output_file;
+    if (std::filesystem::exists(ver_list_name) == false)
+    {
+        std::cout << "[-] Entered filename does not exist;" << "\n"; 
+        full_ver_list_name = "app_ver_list";
+        full_ver_list_name += "<" + ver_list_name + ">.txt";
+        std::cout << full_ver_list_name << "\n";
+        // output file stream allows you to write contents to a file.
+        std::cout << "[!] Creating " << full_ver_list_name << "\n";
+    }
+    /*
     if (read_or_store == "read")
     {
         full_ver_list_name = "app_ver_list";
@@ -30,6 +43,7 @@ void write_to_text_collection(std::string& URL_input, std::string& ver_list_name
     {
         full_ver_list_name = ver_list_name;
     }
+    */
     output_file.open(full_ver_list_name, std::ios::app);
     /*
     std::ofstream output_file;
@@ -247,6 +261,10 @@ void txt_file_selection(std::string read_or_store)
         std::cout << "> ";
         std::getline(std::cin, user_input);
         // Validate whether user input is a number
+        if (user_input == "e" || user_input == "exit")
+        {
+            break;
+        }
         if (user_input.find_first_not_of("0123456789") != std::string::npos)
         {
             std::cout << "[-] Invalid input - Please try again:" << "\n";
@@ -268,6 +286,7 @@ void txt_file_selection(std::string read_or_store)
                 break;
             }
         }
+        std::cout << "\n";
         if (read_or_store == "read")
         {
             read_file(available_txt_files_to_open);
@@ -291,7 +310,7 @@ void txt_file_selection(std::string read_or_store)
                 else
                 {
                     // Function to accept and store URLs here:
-                    write_to_text_collection(user_input, available_txt_files_to_open, read_or_store);
+                    write_to_text_collection(user_input, available_txt_files_to_open);
                 }
             }
             
@@ -313,10 +332,10 @@ int main()
     std::string ver_list_name = "";
     while (true)
     {
-        std::cout << "[1] Select mode \"1\" to enter URLs to store" << "\n";
-        std::cout << "[2] Select mode \"2\" to scan URLs for updates" << "\n";
-        std::cout << "[3] Select mode \"3\" to <test>" << "\n";
-        std::cout << "[4] Select mode \"4\" to <test>" << "\n";
+        std::cout << "[1] Select mode \"1\" to enter URLs to store;" << "\n";
+        std::cout << "[2] Select mode \"2\" to scan URLs for updates;" << "\n";
+        std::cout << "[3] Select mode \"3\" to read selection;" << "\n";
+        std::cout << "[4] Select mode \"4\" to store selection;" << "\n";
         std::cout << "[e/exit] Exit" << "\n";
         std::cout << "> ";
         user_input_validation(user_input);
@@ -331,7 +350,7 @@ int main()
                 std::cout << "[>] Enter new list name:" << "\n";
                 std::cout << "> ";
                 std::getline(std::cin, user_input);
-                write_to_text_collection(user_input, ver_list_name, test);
+                write_to_text_collection(user_input, ver_list_name);
             }
 
             while (true)
@@ -351,7 +370,7 @@ int main()
                 else
                 { 
                     // Function to accept and store URLs here:
-                    write_to_text_collection(user_input, ver_list_name, test);
+                    write_to_text_collection(user_input, ver_list_name);
                 }
             }
         }
