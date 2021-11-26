@@ -21,29 +21,12 @@ void write_to_text_collection(std::string& URL_input, std::string& ver_list_name
     if (std::filesystem::exists(ver_list_name) == false)
     {
         std::cout << "[-] Entered filename does not exist;" << "\n"; 
-        full_ver_list_name = "app_ver_list";
+        full_ver_list_name = "app_ver_list-";
         full_ver_list_name += "<" + ver_list_name + ">.txt";
         std::cout << full_ver_list_name << "\n";
         // output file stream allows you to write contents to a file.
         std::cout << "[!] Creating " << full_ver_list_name << "\n";
     }
-    /*
-    if (read_or_store == "read")
-    {
-        full_ver_list_name = "app_ver_list";
-        full_ver_list_name += "<" + ver_list_name + ">.txt";
-        std::cout << full_ver_list_name << "\n";
-        // output file stream allows you to write contents to a file.
-        if (std::filesystem::exists(full_ver_list_name) == false)
-        {
-            std::cout << "[!] Creating " << full_ver_list_name << "\n";
-        }
-    }
-    else
-    {
-        full_ver_list_name = ver_list_name;
-    }
-    */
     output_file.open(full_ver_list_name, std::ios::app);
     /*
     std::ofstream output_file;
@@ -209,7 +192,7 @@ std::string user_input_validation(std::string &user_input)
     return user_input;
 }
 
-void read_file(std::string file)
+void read_txt_file(std::string file)
 {
     std::ifstream input_file;
     std::string input_file_line;
@@ -289,7 +272,7 @@ void txt_file_selection(std::string read_or_store)
         std::cout << "\n";
         if (read_or_store == "read")
         {
-            read_file(available_txt_files_to_open);
+            read_txt_file(available_txt_files_to_open);
         }
         else if (read_or_store == "store")
         {
@@ -332,7 +315,7 @@ int main()
     std::string ver_list_name = "";
     while (true)
     {
-        std::cout << "[1] Select mode \"1\" to enter URLs to store;" << "\n";
+        std::cout << "[1] Select mode \"1\" to create new text file;" << "\n";
         std::cout << "[2] Select mode \"2\" to scan URLs for updates;" << "\n";
         std::cout << "[3] Select mode \"3\" to read selection;" << "\n";
         std::cout << "[4] Select mode \"4\" to store selection;" << "\n";
@@ -341,18 +324,10 @@ int main()
         user_input_validation(user_input);
         if (user_input == "1")
         {
-
-            std::string test = "store";
-            std::cout << "[>] Create new file ?" << "\n" << "> ";
+            std::cout << "[>] Enter new list name:" << "\n";
+            std::cout << "> ";
             std::getline(std::cin, user_input);
-            if (user_input == "y")
-            {
-                std::cout << "[>] Enter new list name:" << "\n";
-                std::cout << "> ";
-                std::getline(std::cin, user_input);
-                write_to_text_collection(user_input, ver_list_name);
-            }
-
+            ver_list_name = user_input;
             while (true)
             {
                 std::cout << "[>] Enter a valid URL: " << "\n" << "> ";
@@ -376,7 +351,8 @@ int main()
         }
         else if (user_input == "2")
         {
-            read_file("app_ver_list.txt");
+            // Default text file.
+            read_txt_file("app_ver_list.txt");
         }
         else if (user_input == "3")
         {
