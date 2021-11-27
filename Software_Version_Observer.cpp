@@ -18,6 +18,11 @@ void write_to_text_collection(std::string& URL_input, std::string& ver_list_name
 
     std::string full_ver_list_name = ver_list_name;
     std::ofstream output_file;
+
+    // Issue: ver_list_name = 123. 123 -> "app_ver_list-<123>.txt"
+    // Round 2: ver_list_name = 123. 123 != app_ver_list-<123>.txt. 123 -> "app_ver_list-<123>.txt"
+    // User unlikely to enter full name of text file to be create.
+
     if (std::filesystem::exists(ver_list_name) == false)
     {
         std::cout << "[-] Entered filename does not exist;" << "\n"; 
@@ -296,7 +301,6 @@ void txt_file_selection(std::string read_or_store)
                     write_to_text_collection(user_input, available_txt_files_to_open);
                 }
             }
-            
         }
         break;
     }
@@ -327,6 +331,7 @@ int main()
             std::cout << "[>] Enter new list name:" << "\n";
             std::cout << "> ";
             std::getline(std::cin, user_input);
+            std::cout << "\n";
             ver_list_name = user_input;
             while (true)
             {
@@ -343,7 +348,8 @@ int main()
                     std::cout << "[-] Invalid URL. Please try again: " << "\n\n";
                 }
                 else
-                { 
+                {
+                    std::cout << "\n";
                     // Function to accept and store URLs here:
                     write_to_text_collection(user_input, ver_list_name);
                 }
