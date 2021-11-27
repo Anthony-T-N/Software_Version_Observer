@@ -13,6 +13,7 @@
 // Stores entered URLs into a text file.
 void write_to_text_collection(std::string& URL_input, std::string& ver_list_name)
 {
+    // Issue: Files not being created.
 
     // Reminder: Function creates file (If it doesn't exist) and stores URL. 
 
@@ -23,7 +24,7 @@ void write_to_text_collection(std::string& URL_input, std::string& ver_list_name
     // Round 2: ver_list_name = 123. 123 != app_ver_list-<123>.txt. 123 -> "app_ver_list-<123>.txt"
     // User unlikely to enter full name of text file to be create.
 
-    if (std::filesystem::exists(ver_list_name) == false)
+    if (std::filesystem::exists(ver_list_name) == false || std::filesystem::exists("app_ver_list-<" + ver_list_name + ">.txt") == false)
     {
         std::cout << "[-] Entered filename does not exist;" << "\n"; 
         full_ver_list_name = "app_ver_list-";
