@@ -24,6 +24,8 @@ void write_to_text_collection(std::string& URL_input, std::string& ver_list_name
     // Round 2: ver_list_name = 123. 123 != app_ver_list-<123>.txt. 123 -> "app_ver_list-<123>.txt"
     // User unlikely to enter full name of text file to be create.
 
+    std::cout << "[DEBUG]: " << "app_ver_list-<" + ver_list_name + ">.txt" << "\n";
+
     if (std::filesystem::exists(ver_list_name) == false || std::filesystem::exists("app_ver_list-<" + ver_list_name + ">.txt") == false)
     {
         std::cout << "[-] Entered filename does not exist;" << "\n"; 
@@ -33,7 +35,20 @@ void write_to_text_collection(std::string& URL_input, std::string& ver_list_name
         // output file stream allows you to write contents to a file.
         std::cout << "[!] Creating " << full_ver_list_name << "\n";
     }
+    std::cout << "[DEBUG] " << full_ver_list_name << "\n";
+    // Fails to process strings.
+    // https://stackoverflow.com/questions/28403767/passing-absolute-file-name-to-read-file-in-c
+    // https://stackoverflow.com/questions/1662624/c-ifstream-open-problem-with-passing-a-string-for-text-file-name
     output_file.open(full_ver_list_name, std::ios::app);
+    if (std::filesystem::exists(full_ver_list_name) == false)
+    {
+        std::cout << " FAIL ";
+        std::cin.get();
+    }
+    std::cout << "[+] Opened " << full_ver_list_name << " successfully;" << "\n";
+    output_file << URL_input << "\n";
+    std::cout << "[+] Successfully stored " << URL_input << "\n\n";
+    output_file.close();
     /*
     std::ofstream output_file;
     if (std::filesystem::exists("app_ver_list.txt") == false)
@@ -42,10 +57,6 @@ void write_to_text_collection(std::string& URL_input, std::string& ver_list_name
     }
     output_file.open("app_ver_list.txt", std::ios::app);
     */
-    std::cout << "[+] Opened " << full_ver_list_name << " successfully;" << "\n";
-    output_file << URL_input << "\n";
-    std::cout << "[+] Successfully stored " << URL_input << "\n\n";
-    output_file.close();
 }
 
 static size_t write_data(void* ptr, size_t size, size_t nmemb, void* stream)
