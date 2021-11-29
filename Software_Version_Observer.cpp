@@ -35,11 +35,13 @@ void write_to_text_collection(std::string& URL_input, std::string& ver_list_name
         // output file stream allows you to write contents to a file.
         std::cout << "[!] Creating " << full_ver_list_name << "\n";
     }
+    std::string test = std::filesystem::current_path().string() + "\\" + full_ver_list_name;
     std::cout << "[DEBUG] " << full_ver_list_name << "\n";
+    std::cout << test << "\n";
     // Fails to process strings.
     // https://stackoverflow.com/questions/28403767/passing-absolute-file-name-to-read-file-in-c
     // https://stackoverflow.com/questions/1662624/c-ifstream-open-problem-with-passing-a-string-for-text-file-name
-    output_file.open(full_ver_list_name, std::ios::app);
+    output_file.open(test.c_str(), std::ios::app);
     if (std::filesystem::exists(full_ver_list_name) == false)
     {
         std::cout << " FAIL ";
