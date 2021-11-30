@@ -41,8 +41,13 @@ void write_to_text_collection(std::string& URL_input, std::string& ver_list_name
     // Fails to process strings.
     // https://stackoverflow.com/questions/28403767/passing-absolute-file-name-to-read-file-in-c
     // https://stackoverflow.com/questions/1662624/c-ifstream-open-problem-with-passing-a-string-for-text-file-name
-    output_file.open(test.c_str(), std::ios::app);
-    if (std::filesystem::exists(full_ver_list_name) == false)
+    //output_file.open(test.c_str(), std::ios::app);
+    output_file.open(full_ver_list_name, std::ios::app);
+    if (output_file.is_open())
+    {
+        std::cout << "[DEBUG] File is opened;" << "\n";
+    }
+    else
     {
         std::cout << " FAIL ";
         std::cin.get();
