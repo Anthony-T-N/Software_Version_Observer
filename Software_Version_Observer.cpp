@@ -24,13 +24,13 @@ void write_to_text_collection(std::string& URL_input, std::string& ver_list_name
     // Round 2: ver_list_name = 123. 123 != app_ver_list-<123>.txt. 123 -> "app_ver_list-<123>.txt"
     // User unlikely to enter full name of text file to be create.
 
-    std::cout << "[DEBUG]: " << "app_ver_list-<" + ver_list_name + ">.txt" << "\n";
+    std::cout << "[DEBUG]: " << "app_ver_list_<" + ver_list_name + ">.txt" << "\n";
 
-    if (std::filesystem::exists(ver_list_name) == false || std::filesystem::exists("app_ver_list-<" + ver_list_name + ">.txt") == false)
+    if (std::filesystem::exists(ver_list_name) == false || std::filesystem::exists("app_ver_list_<" + ver_list_name + ">.txt") == false)
     {
         std::cout << "[-] Entered filename does not exist;" << "\n"; 
-        full_ver_list_name = "app_ver_list-";
-        full_ver_list_name += "<" + ver_list_name + ">.txt";
+        full_ver_list_name = "app_ver_list_";
+        full_ver_list_name +=  ver_list_name + ".txt";
         std::cout << full_ver_list_name << "\n";
         // output file stream allows you to write contents to a file.
         std::cout << "[!] Creating " << full_ver_list_name << "\n";
@@ -42,6 +42,7 @@ void write_to_text_collection(std::string& URL_input, std::string& ver_list_name
     // https://stackoverflow.com/questions/28403767/passing-absolute-file-name-to-read-file-in-c
     // https://stackoverflow.com/questions/1662624/c-ifstream-open-problem-with-passing-a-string-for-text-file-name
     //output_file.open(test.c_str(), std::ios::app);
+    // Solution: Remove "<>" characters from string to pass variable strings to create files.
     output_file.open(full_ver_list_name, std::ios::app);
     if (output_file.is_open())
     {
