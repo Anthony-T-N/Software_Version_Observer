@@ -20,17 +20,13 @@ void write_to_text_collection(std::string& URL_input, std::string& ver_list_name
     std::string full_ver_list_name = ver_list_name;
     std::ofstream output_file;
 
-    // Issue: ver_list_name = 123. 123 -> "app_ver_list-<123>.txt"
-    // Round 2: ver_list_name = 123. 123 != app_ver_list-<123>.txt. 123 -> "app_ver_list-<123>.txt"
-    // User unlikely to enter full name of text file to be create.
+    std::cout << "[DEBUG]: " << "app_ver_list-[" + ver_list_name + "].txt" << "\n";
 
-    std::cout << "[DEBUG]: " << "app_ver_list_" + ver_list_name + ".txt" << "\n";
-
-    if (std::filesystem::exists(ver_list_name) == false && std::filesystem::exists("app_ver_list_" + ver_list_name + ".txt") == false)
+    if (std::filesystem::exists(ver_list_name) == false && std::filesystem::exists("app_ver_list-[" + ver_list_name + "].txt") == false)
     {
         std::cout << "[-] Entered filename does not exist;" << "\n"; 
-        full_ver_list_name = "app_ver_list_";
-        full_ver_list_name +=  ver_list_name + ".txt";
+        full_ver_list_name = "app_ver_list-[";
+        full_ver_list_name +=  ver_list_name + "].txt";
         std::cout << "[DEBUG]: " << full_ver_list_name << "\n";
         // output file stream allows you to write contents to a file.
         std::cout << "[!] Creating " << full_ver_list_name << "\n";
@@ -40,24 +36,16 @@ void write_to_text_collection(std::string& URL_input, std::string& ver_list_name
     if (output_file.is_open())
     {
         std::cout << "[+] Text file successfully opened;" << "\n";
+        std::cout << "[+] Opened " << full_ver_list_name << " successfully;" << "\n";
     }
     else
     {
         std::cout << "[-] Text file failed opened;";
         std::cin.get();
     }
-    std::cout << "[+] Opened " << full_ver_list_name << " successfully;" << "\n";
     output_file << URL_input << "\n";
     std::cout << "[+] Successfully stored " << URL_input << "\n\n";
     output_file.close();
-    /*
-    std::ofstream output_file;
-    if (std::filesystem::exists("app_ver_list.txt") == false)
-    {
-        std::cout << "[!] Creating new <app_ver_list.txt>;" << "\n";
-    }
-    output_file.open("app_ver_list.txt", std::ios::app);
-    */
 }
 
 static size_t write_data(void* ptr, size_t size, size_t nmemb, void* stream)
