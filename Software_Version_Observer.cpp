@@ -13,22 +13,20 @@
 // Stores entered URLs into a text file.
 void write_to_text_collection(std::string& URL_input, std::string& ver_list_name)
 {
-    // Issue: Files not being created.
-
     // Reminder: Function creates file (If it doesn't exist) and stores URL. 
 
     std::string full_ver_list_name = ver_list_name;
     std::ofstream output_file;
 
-    std::cout << "[DEBUG]: " << "app_ver_list-[" + ver_list_name + "].txt" << "\n";
-    std::cout << "[DEBUG]: " << ver_list_name << "\n";
+    //std::cout << "[DEBUG]: " << "app_ver_list-[" + ver_list_name + "].txt" << "\n";
+    //std::cout << "[DEBUG]: " << ver_list_name << "\n";
 
     if (std::filesystem::exists(ver_list_name) == false && std::filesystem::exists("app_ver_list-[" + ver_list_name + "].txt") == false)
     {
         std::cout << "[-] Entered filename does not exist;" << "\n"; 
         full_ver_list_name = "app_ver_list-[";
         full_ver_list_name +=  ver_list_name + "].txt";
-        std::cout << "[DEBUG]: " << full_ver_list_name << "\n";
+        //std::cout << "[DEBUG]: " << full_ver_list_name << "\n";
         // output file stream allows you to write contents to a file.
         std::cout << "[!] Creating " << full_ver_list_name << "\n";
     }
@@ -57,8 +55,6 @@ static size_t write_data(void* ptr, size_t size, size_t nmemb, void* stream)
 
 void download_file(std::string url)
 {
-    // Function uses: <iostream>
-
     CURL* curl;
     FILE* fp;
     CURLcode response;
@@ -276,7 +272,6 @@ void txt_file_selection(std::string read_or_store)
                 break;
             }
         }
-        std::cout << "\n";
         if (read_or_store == "read")
         {
             read_txt_file(available_txt_files_to_open);
