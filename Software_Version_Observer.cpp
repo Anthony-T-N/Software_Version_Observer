@@ -34,6 +34,7 @@ void write_to_text_collection(std::string& URL_input, std::string& ver_list_name
     output_file.open(full_ver_list_name, std::ios::app);
     if (output_file.is_open())
     {
+        // ISSUE: Step 1) Create file. Step 2) Add another URL to same file. Step 3) A new file is created with a new name.
         std::cout << "[+] Text file successfully opened;" << "\n";
         std::cout << "[+] Opened " << full_ver_list_name << " successfully;" << "\n";
     }
@@ -45,6 +46,7 @@ void write_to_text_collection(std::string& URL_input, std::string& ver_list_name
     output_file << URL_input << "\n";
     std::cout << "[+] Successfully stored " << URL_input << "\n\n";
     output_file.close();
+    ver_list_name = full_ver_list_name;
 }
 
 static size_t write_data(void* ptr, size_t size, size_t nmemb, void* stream)
@@ -318,7 +320,7 @@ int main()
     {
         std::cout << "[1] Select mode \"1\" to create new text file;" << "\n";
         std::cout << "[2] Select mode \"2\" to scan URLs for updates based on file selection;" << "\n";
-        std::cout << "[3] Select mode \"3\" to store selection;" << "\n";
+        std::cout << "[3] Select mode \"3\" to store URLs in file selection;" << "\n";
         std::cout << "[e/exit] Exit" << "\n";
         std::cout << "> ";
         user_input_validation(user_input);
